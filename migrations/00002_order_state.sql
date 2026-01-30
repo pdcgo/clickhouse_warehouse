@@ -9,6 +9,7 @@ CREATE TABLE order_latest
     revenue_amount Decimal(38, 18),
     warehouse_fee_amount Decimal(38, 18),
     total_cost_amount Decimal(38, 18),
+    order_time_at DateTime64(6),
     created_at DateTime64(6),
     _peerdb_version UInt64,
 
@@ -32,6 +33,7 @@ SELECT
     toDecimal128(order_mp_total, 18) as revenue_amount,
     toDecimal128(warehouse_fee, 18) as warehouse_fee_amount,
     toDecimal128(total, 18) as total_cost_amount,
+    order_time as order_time_at,
     created_at,
     _peerdb_version
 FROM warehouse_prod.orders
@@ -48,6 +50,7 @@ SELECT
     toDecimal128(order_mp_total, 18) as revenue_amount,
     toDecimal128(warehouse_fee, 18) as warehouse_fee_amount,
     toDecimal128(total, 18) as total_cost_amount,
+    order_time as order_time_at,
     created_at,
     _peerdb_version
 FROM warehouse_prod.orders
