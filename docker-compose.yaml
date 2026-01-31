@@ -1,0 +1,15 @@
+services:
+  clickhouse:
+    user: root
+    image: clickhouse/clickhouse-server:24.12
+    container_name: clickhouse
+    ports:
+      - "8123:8123"   # HTTP
+      - "9000:9000"   # Native
+    
+    environment:
+      - CLICKHOUSE_USER=user
+      - CLICKHOUSE_PASSWORD=password
+
+    # volumes:
+    #   - ./clickhouse_data_test:/var/lib/clickhouse

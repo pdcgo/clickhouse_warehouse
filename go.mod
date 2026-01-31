@@ -1,4 +1,4 @@
-module warehouse
+module github.com/pdcgo/clickhouse_warehouse
 
 go 1.25.0
 
