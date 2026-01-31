@@ -40,6 +40,7 @@ SELECT
     toDecimal128(order_mp_total, 18) as revenue_amount,
     toDecimal128(warehouse_fee, 18) as warehouse_fee_amount,
     toDecimal128(total, 18) as total_cost_amount,
+    
 
     toHour(toTimeZone(order_time, 'Asia/Jakarta')) AS hours,
     (toHour(toTimeZone(order_time, 'Asia/Jakarta')) BETWEEN 0 AND 17) as is_working_hours,
@@ -48,6 +49,10 @@ SELECT
     created_at,
     _peerdb_version
 FROM warehouse_prod.orders
+WHERE
+    is_partial != true
+    OR is_order_fake != true
+    
 -- +goose StatementEnd
 
 -- +goose StatementBegin
@@ -71,6 +76,9 @@ SELECT
     created_at,
     _peerdb_version
 FROM warehouse_prod.orders
+WHERE
+    is_partial != true
+    OR is_order_fake != true
 -- +goose StatementEnd
 
 -- +goose Down
