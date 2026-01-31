@@ -5,10 +5,15 @@ CREATE TABLE order_latest
     order_id UInt64,
     shop_id Int64,
     team_id Int64, 
+    created_by_id Int64,
+
     status String,
     revenue_amount Decimal(38, 18),
     warehouse_fee_amount Decimal(38, 18),
     total_cost_amount Decimal(38, 18),
+
+    hours UInt8,
+    is_working_hours UInt8,
     order_time_at DateTime64(6),
     created_at DateTime64(6),
     _peerdb_version UInt64,
@@ -29,10 +34,16 @@ SELECT
     id as order_id,
     order_mp_id as shop_id,
     team_id,
+    created_by_id,
+
     status,
     toDecimal128(order_mp_total, 18) as revenue_amount,
     toDecimal128(warehouse_fee, 18) as warehouse_fee_amount,
     toDecimal128(total, 18) as total_cost_amount,
+
+    toHour(toTimeZone(order_time, 'Asia/Jakarta')) AS hours,
+    (toHour(toTimeZone(order_time, 'Asia/Jakarta')) BETWEEN 0 AND 17) as is_working_hours,
+
     order_time as order_time_at,
     created_at,
     _peerdb_version
@@ -46,10 +57,16 @@ SELECT
     id as order_id,
     order_mp_id as shop_id,
     team_id,
+    created_by_id,
+
     status,
     toDecimal128(order_mp_total, 18) as revenue_amount,
     toDecimal128(warehouse_fee, 18) as warehouse_fee_amount,
     toDecimal128(total, 18) as total_cost_amount,
+
+    toHour(toTimeZone(order_time, 'Asia/Jakarta')) AS hours,
+    (toHour(toTimeZone(order_time, 'Asia/Jakarta')) BETWEEN 0 AND 17) as is_working_hours,
+
     order_time as order_time_at,
     created_at,
     _peerdb_version
