@@ -1,0 +1,20 @@
+{
+    "go.buildFlags": [
+        "-tags=wireinject"
+    ],
+    "sqltools.connections": [
+        {
+            "server": "http://localhost",
+            "port": 8123,
+            "database": "default",
+            "useJWT": false,
+            "requestTimeout": 30000,
+            "enableTls": false,
+            "previewLimit": 50,
+            "username": "user",
+            "driver": "ClickHouse",
+            "name": "test",
+            "askForPassword": true
+        }
+    ]
+}

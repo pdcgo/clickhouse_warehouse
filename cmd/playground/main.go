@@ -88,6 +88,6 @@ ORDER BY version_id
 			return err
 		}
 	}
-	err = goose.UpContext(ctx, db, "./test_migrations")
+
 	return err
 }
