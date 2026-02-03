@@ -13,6 +13,7 @@ type Tool *cli.Command
 func NewTool(
 	createForTest CreateForTest,
 	migtest Migtest,
+	devel Devel,
 ) Tool {
 	return &cli.Command{
 		Commands: []*cli.Command{
@@ -34,6 +35,18 @@ func NewTool(
 			{
 				Name:   "migtest",
 				Action: cli.ActionFunc(migtest),
+				Arguments: []cli.Argument{
+					&cli.StringArg{
+						Name: "command",
+					},
+					&cli.StringArg{
+						Name: "options",
+					},
+				},
+			},
+			{
+				Name:   "devel",
+				Action: cli.ActionFunc(devel),
 				Arguments: []cli.Argument{
 					&cli.StringArg{
 						Name: "command",

@@ -12,6 +12,7 @@ func InitializeTool() (Tool, error) {
 	wire.Build(
 		NewCreateFortest,
 		NewMigtest,
+		NewDevel,
 		NewTool,
 	)
 	return &cli.Command{}, nil

@@ -13,7 +13,7 @@ type CreateForTest cli.ActionFunc
 
 func NewCreateFortest() CreateForTest {
 	return func(ctx context.Context, c *cli.Command) error {
-		db := database.NewTestDatabase()
+		db := database.NewLocalDatabase()
 		isSql := c.Bool("sql")
 
 		fname := c.Arguments[0].Get().(string)

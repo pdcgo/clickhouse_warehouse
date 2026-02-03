@@ -11,6 +11,7 @@ package main
 func InitializeTool() (Tool, error) {
 	createForTest := NewCreateFortest()
 	migtest := NewMigtest()
-	tool := NewTool(createForTest, migtest)
+	devel := NewDevel()
+	tool := NewTool(createForTest, migtest, devel)
 	return tool, nil
 }

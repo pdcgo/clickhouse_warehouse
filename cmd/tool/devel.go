@@ -2,10 +2,8 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
-	"log/slog"
 	"strconv"
 
 	"github.com/pdcgo/clickhouse_warehouse/database"
@@ -13,9 +11,9 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-type Migtest cli.ActionFunc
+type Devel cli.ActionFunc
 
-func NewMigtest() Migtest {
+func NewDevel() Devel {
 
 	return func(ctx context.Context, c *cli.Command) error {
 
@@ -28,7 +26,7 @@ func NewMigtest() Migtest {
 		}
 
 		// running initialization
-		versionTableName := "dbversion_test"
+		versionTableName := "dbversion_devel"
 		err := InitializeVersion(ctx, versionTableName, db)
 		if err != nil {
 			return err
@@ -37,7 +35,7 @@ func NewMigtest() Migtest {
 		goose.SetDialect("clickhouse")
 
 		// running migration
-		dir := "./test_migrations"
+		dir := "./devel_migrations"
 
 		switch command {
 		case "create":
@@ -109,61 +107,4 @@ func NewMigtest() Migtest {
 
 		return nil
 	}
-}
-
-type Version struct {
-	Version   int64
-	IsApplied bool
-	Tstamp    string
-}
-
-func InitializeVersion(ctx context.Context, versionTableName string, db *sql.DB) error {
-	var err error
-
-	slog.Info("creating version")
-
-	// create database
-
-	query := fmt.Sprintf(`
-CREATE TABLE IF NOT EXISTS %s
-(
-    version_id Int64,
-    is_applied UInt8,
-    tstamp DateTime DEFAULT now()
-)
-ENGINE = MergeTree
-ORDER BY version_id	
-`, versionTableName)
-
-	_, err = db.ExecContext(ctx, query)
-
-	if err != nil {
-		return err
-	}
-
-	rows, err := db.QueryContext(ctx, fmt.Sprintf("select * from %s", versionTableName))
-	if err != nil {
-		return err
-	}
-
-	var versions []*Version
-	for rows.Next() {
-		var version Version
-		err = rows.Scan(&version.Version, &version.IsApplied, &version.Tstamp)
-		if err != nil {
-			return err
-		}
-
-		versions = append(versions, &version)
-	}
-
-	if len(versions) == 0 {
-		slog.Info("inserting log")
-		_, err = db.ExecContext(ctx, fmt.Sprintf("INSERT INTO %s (version_id, is_applied) VALUES (1, 1)", versionTableName))
-		if err != nil {
-			return err
-		}
-	}
-
-	return err
 }
