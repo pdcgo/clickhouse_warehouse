@@ -32,7 +32,7 @@ func main() {
 
 	goose.SetTableName("prod.goose_db_version")
 	goose.SetDialect("clickhouse")
-	goose.SetSequential(true)
+	// goose.SetSequential(true)
 
 	defer func() {
 		if err := db.Close(); err != nil {

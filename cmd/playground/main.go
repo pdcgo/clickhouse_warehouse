@@ -7,7 +7,6 @@ import (
 	"log/slog"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
-	"github.com/pressly/goose/v3"
 )
 
 func main() {
@@ -22,10 +21,7 @@ func main() {
 
 	defer db.Close()
 	// ctx := context.Background()
-	err := goose.Create(db, "./test_migrations", "init_test", "sql")
-	if err != nil {
-		panic(err)
-	}
+	// err := goose.UpContext()
 
 	// err := InitializeVersion(ctx, "test", db)
 
