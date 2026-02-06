@@ -83,7 +83,7 @@ func (r *Replication) StreamStart(
 	publicationName string,
 	handler ReplicationHandler,
 ) error {
-
+	pctx := ctx
 	slotMng := SlotManage{r.conn}
 	slotName, err := slotMng.SlotInitialize(ctx, slotName, true)
 
@@ -159,7 +159,12 @@ func (r *Replication) StreamStart(
 			// log.Println("Primary Keepalive Message =>", "ServerWALEnd:", pkm.ServerWALEnd, "ServerTime:", pkm.ServerTime, "ReplyRequested:", pkm.ReplyRequested)
 			if pkm.ServerWALEnd > clientXLogPos {
 				clientXLogPos = pkm.ServerWALEnd
+				err = r.state.SetLsn(pctx, clientXLogPos)
+				if err != nil {
+					return err
+				}
 			}
+
 			if pkm.ReplyRequested {
 				nextStandbyMessageDeadline = time.Time{}
 			}
@@ -183,7 +188,12 @@ func (r *Replication) StreamStart(
 			}
 
 			if xld.WALStart > clientXLogPos {
+
 				clientXLogPos = xld.WALStart
+				err = r.state.SetLsn(pctx, clientXLogPos)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}

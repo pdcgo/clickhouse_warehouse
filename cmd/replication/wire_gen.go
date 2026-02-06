@@ -7,7 +7,6 @@
 package main
 
 import (
-	"github.com/pdcgo/clickhouse_warehouse/replication"
 	"github.com/pdcgo/shared/configs"
 )
 
@@ -18,7 +17,10 @@ func InitializeAppReplication() (AppReplication, error) {
 	if err != nil {
 		return nil, err
 	}
-	replicationState := replication.NewMemoryReplicationState()
+	replicationState, err := NewReplicationState()
+	if err != nil {
+		return nil, err
+	}
 	getReplication := NewReplication(appConfig, replicationState)
 	startFunc := NewStartFunc(getReplication)
 	backfillFunc := NewBackfillFunc(getReplication, replicationState)

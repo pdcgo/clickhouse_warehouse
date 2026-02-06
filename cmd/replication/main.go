@@ -4,12 +4,20 @@ import (
 	"context"
 	"os"
 
+	"cloud.google.com/go/firestore"
 	"github.com/pdcgo/clickhouse_warehouse/replication"
 	"github.com/pdcgo/shared/configs"
 	"github.com/urfave/cli/v3"
 )
 
-type AppReplication *cli.Command
+func NewReplicationState() (replication.ReplicationState, error) {
+	ctx := context.Background()
+	client, err := firestore.NewClient(ctx, os.Getenv("GOOGLE_CLOUD_PROJECT"))
+	if err != nil {
+		return nil, err
+	}
+	return replication.NewFirestoreReplicationState(ctx, client, "devel")
+}
 
 type GetReplication func(ctx context.Context) (*replication.Replication, error)
 
@@ -21,6 +29,8 @@ func NewReplication(
 		return replication.ConnectReplication(ctx, cfg.Database, state)
 	}
 }
+
+type AppReplication *cli.Command
 
 func NewAppReplication(
 	start StartFunc,
